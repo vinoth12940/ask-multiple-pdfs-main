@@ -1,5 +1,5 @@
+import os
 import streamlit as st
-from dotenv import load_dotenv
 import pandas as pd
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.embeddings import OpenAIEmbeddings
@@ -7,8 +7,51 @@ from langchain.vectorstores import FAISS
 from langchain.chat_models import ChatOpenAI
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain
-from htmlTemplates import css, bot_template, user_template
-import os
+
+css = '''
+<style>
+.chat-message {
+    padding: 1.5rem; border-radius: 0.5rem; margin-bottom: 1rem; display: flex
+}
+.chat-message.user {
+    background-color: #2b313e
+}
+.chat-message.bot {
+    background-color: #475063
+}
+.chat-message .avatar {
+  width: 20%;
+}
+.chat-message .avatar img {
+  max-width: 78px;
+  max-height: 78px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.chat-message .message {
+  width: 80%;
+  padding: 0 1.5rem;
+  color: #fff;
+}
+'''
+
+bot_template = '''
+<div class="chat-message bot">
+    <div class="avatar">
+        <img src="AIImage.jpeg" style="max-height: 78px; max-width: 78px; border-radius: 50%; object-fit: cover;">
+    </div>
+    <div class="message">{{MSG}}</div>
+</div>
+'''
+
+user_template = '''
+<div class="chat-message user">
+    <div class="avatar">
+        <img src="human.png">
+    </div>    
+    <div class="message">{{MSG}}</div>
+</div>
+'''
 
 def get_csv_text(csv_file):
     df = pd.read_csv(csv_file)
@@ -62,7 +105,6 @@ def handle_userinput(user_question):
 
 
 def main():
-    load_dotenv()
     st.set_page_config(page_title="Chat with CSV",
                        page_icon=":CSV:")
     st.write(css, unsafe_allow_html=True)

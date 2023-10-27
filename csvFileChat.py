@@ -98,5 +98,5 @@ def main():
 
 
 if __name__ == '__main__':
-    os.environ["OPENAI_API_KEY"] = "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"
+    os.environ["OPENAI_API_KEY"] = ""
     main()

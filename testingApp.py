@@ -53,9 +53,11 @@ user_template = '''
 </div>
 '''
 
-def get_csv_text(csv_file):
-    df = pd.read_csv(csv_file)
-    text = df.to_string(index=False)
+def get_csv_text(csv_files):
+    text = ""
+    for csv_file in csv_files:
+        df = pd.read_csv(csv_file)
+        text += df.to_string(index=False)
     return text
 
 
@@ -101,7 +103,7 @@ def handle_userinput(user_question):
                 st.write(bot_template.replace(
                     "{{MSG}}", message.content), unsafe_allow_html=True)
     else:
-        st.write("Please upload a CSV file and click 'Process' to start a conversation.")
+        st.write("Please upload CSV files and click 'Process' to start a conversation.")
 
 
 def main():
@@ -121,12 +123,12 @@ def main():
 
     with st.sidebar:
         st.subheader("Your data")
-        csv_file = st.file_uploader(
-            "Upload your CSV file here and click on 'Process'", type=["csv"])
+        csv_files = st.file_uploader(
+            "Upload your CSV files here and click on 'Process'", type=["csv"], accept_multiple_files=True)
         if st.button("Process"):
             with st.spinner("Processing"):
                 # get csv text
-                raw_text = get_csv_text(csv_file)
+                raw_text = get_csv_text(csv_files)
 
                 # get the text chunks
                 text_chunks = get_text_chunks(raw_text)
